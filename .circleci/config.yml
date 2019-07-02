@@ -5,6 +5,7 @@ jobs:
       - image: circleci/python:3.6.2-stretch-browsers
     steps:
       - checkout
+      - run: curl https://galaxy.ansible.com/api/v1/notifications/
 
     notify:
       webhooks:
