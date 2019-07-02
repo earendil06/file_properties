@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  roles:
+    - role: file_properties
+      file: myfile.properties
+      add:
+        toto: titi
+        tata: tutu
+        dada: haha
+        gogo: hoho
+      comment:
+        - dada
+        - gogo
+      uncomment:
+        - gogo
+      remove:
+        - tata
+        - toto

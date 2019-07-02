@@ -1,0 +1,39 @@
+---
+# tasks file for file_properties
+
+- name: Create the property file if not exists
+  file:
+    path: "{{ file | mandatory }}"
+    state: touch
+
+- name: Add the specified key-value pairs
+  lineinfile:
+    path: '{{ file }}'
+    regexp: '^{{ item.key }}=(.*)$'
+    line: '{{ item.key }}={{ item.value }}'
+  loop: "{{ lookup('dict', add | default({})) }}"
+  when: add is defined
+
+- name: Comment the lines by key
+  replace:
+    path: '{{ file }}'
+    regexp: '^({{ item }}=)(.*)$'
+    replace: '#\g<1>\g<2>'
+  loop: "{{ comment }}"
+  when: comment is defined
+
+- name: Uncomment the lines by key
+  replace:
+    path: '{{ file }}'
+    regexp: '^#({{ item }}=)(.*)$'
+    replace: '\g<1>\g<2>'
+  loop: "{{ uncomment }}"
+  when: uncomment is defined
+
+- name: Remove the lines by key
+  lineinfile:
+    path: '{{ file }}'
+    regexp: '^({{ item }}=)(.*)$'
+    state: absent
+  loop: "{{ remove }}"
+  when: remove is defined
